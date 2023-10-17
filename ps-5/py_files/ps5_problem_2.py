@@ -1,14 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[126]:
-
-
-
-
-
-# In[180]:
-
+ß
 
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -32,7 +25,7 @@ time = time_pds.values
 
 # third order fit
 time_scaled = time/10**9 #scale time down bc dont work with such large numbers
-A = np.zeros((len(test), 4))
+A = np.zeros((len(time), 4))
 A[:, 0] = 1.
 A[:, 1] = time_scaled 
 A[:, 2] = time_scaled**2
@@ -51,7 +44,7 @@ ym = A.dot(c)
 #residuals_cubic = abs(signal-ym)
 
 #21st order polynomial
-A = np.zeros((len(test), 22))
+A = np.zeros((len(time_scaled), 22))
 A[:, 0] = 1.
 A[:, 1] = time_scaled 
 A[:, 2] = time_scaled**2
@@ -89,15 +82,15 @@ ym = A.dot(c)
 #max(w)/min(w) #condition number
 
 #remove linear trend if you want
-# A = np.zeros((len(time), 2))
-# A[:, 0] = 1.
-# A[:, 1] = time
-# (u, w, vt) = np.linalg.svd(A, full_matrices=False)
-# ainv = vt.transpose().dot(np.diag(1. / w)).dot(u.transpose())
-# c = ainv.dot(signal)
-# ym = A.dot(c) 
-# signal_flat = signal - ym
-# plt.scatter(time_scaled,signal_flat,s=2)
+A = np.zeros((len(time), 2))
+A[:, 0] = 1.
+A[:, 1] = time
+(u, w, vt) = np.linalg.svd(A, full_matrices=False)
+ainv = vt.transpose().dot(np.diag(1. / w)).dot(u.transpose())
+c = ainv.dot(signal)
+ym = A.dot(c) 
+signal_flat = signal - ym
+plt.scatter(time_scaled,signal_flat,s=2)
 
 #Lomb-Scargle calculation
 # this fourier transforms your data and gives you the actual primary frequency but 
@@ -108,6 +101,8 @@ T = time_scaled[N-1]-time_scaled[0]
 yf = fft(signal_flat)
 xf = fftfreq(N, T)[:N//2]
 omega = 2*np.pi*xf[np.argsort(2.0/N * np.abs(yf[0:N//2]))[::-1]][0] 
+
+#periodicity = 1/omega ~.135
 
 A = np.zeros((len(time), 4))
 A[:, 0] = 1.
@@ -132,10 +127,10 @@ plt.legend();
 #w[0]/w[-1] # condition number
 
 
-# In[ ]:
+# In[13]:
 
 
-
+1/omega
 
 
 # In[ ]:
